@@ -1,0 +1,10 @@
+main(int argc,char *argv[],char **env){
+	标准写法
+}
+
+argv[0]指向程序运行的全路径名
+argv[1]指向在dos命令行中执行程序后的第一个字符串
+argv[2]指向第二个
+...
+
+printf("版本为："CV_VERSION);

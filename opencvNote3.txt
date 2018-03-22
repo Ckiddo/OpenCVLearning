@@ -1,0 +1,115 @@
+HighGUI图形用户初步：
+
+cv::Mat pic(320,640,cv::Scalar(100));
+cv::Mat pic(,,CV_8UC4);
+
+imread()函数：
+imread("*.jpeg",0)
+0代表灰度
+1代表彩色
+2代表深度为16位或者32位就返回对应深度的图像，否则就转化为8位的图像
+2|4是无损的原图像
+-1是aplha通道图像
+
+void imshow(const string& winname,InputArray mat);
+其实是
+typedef const _InputArray& InputArray
+
+namedWindow(const string& winname,int flags = WINDOW_AUTOSIZE)创建窗口 //自动适应图像大小，不可改变
+
+WINDOW_NORMAL 可以改变窗口大小 或CV_WINDOW_OPENGL
+
+WINDOW_OPENGL 指出OpenGL
+
+destroyWindow()关闭窗口
+
+图像输出：
+imwrite(const string& filename,InputArray img,const vector<int>& params = vector<int>());
+
+第三个参数：
+对于JPEG图片，参数表示从0到100的图片质量，默认95
+对于PNG表示压缩级别 0到9，较高意味着更小的尺寸和更长的压缩时间，默认为3
+对于PPM，PGM，或PBM参数表示二进制格式标志，0或1，默认为	1
+
+
+Mat &mat
+for(int i = 0;i < mat.rows;i++){
+	for(int j = 0;j < mat.cols;i++){
+		Vec4b& rgba = mat.at<Vec4b>(i,j);
+		rgba[0] = UCHAR_MAX;
+		rgba[1] = saturate_cast<uchar>((float)*UCHAR_MAX);
+		rgba[2] = ...;
+		rgba[3] = ...;
+	}
+}
+
+图像混合：
+将image 和 logo混合
+Mat imageROI 存放图像的ROI
+imageROI = image(Rect(800,350,logo.cols,logo.rows));
+或者
+imageROI = image(Range(350,350+logo.rows),Range(800,800+logo.cols));
+
+addWeighted(imageROI,0.5,logo,0.3,imageROI);
+
+
+滑动条的创建和使用：
+
+int createTrackbar(conststring& trackbarname,conststring& winname,int* value,int count,TrackbarCallback onChange = 0.void* userdata = 0);
+
+第三个参数：
+表示滑块的位置
+
+第四个参数：
+表示滑块可以到达的最大位置的值。
+第五个参数：
+指向回调函数的指针，滑块位置改变时，函数进行回调。原型必须为
+void XXXX(int,void* )第一个参数是轨迹条的位置，第二个参数是用户数据
+第六个参数：
+是用户传给回调函数的数据，用来处理轨迹条事件。
+
+
+const int g_nMaxAlphaValue = 100; Alpha最大值
+int g_nAlphaValueSlider; 滑动条对应变量
+double g_dAlphaValue;
+double g_dBetaValue;
+
+
+void on_Trackbar(int,void*){
+	g_dAlphaValue = g_nAlphaValueSlider/g_nMaxAlphaValue;
+	g_dBetaValue = 1-g_dAlphaValue;
+
+	addWeighted(Mat1,g_dAlphaValue,Mat2,g_dBetaValue,Mat3);
+
+	imshow(WINDOW_NAME,Mat3);
+}
+main(){
+	namedWindow(WINDOW_NAME,1);
+	createTrackbar(TrackbarName,WINDOW_NAME, &g_nAlphaValueSlider,g_nMaxAlphaValue,on_Trackbar);
+
+	on_Trackbar(g_nAlphaValueSlider,0);
+	waitKey(0);
+	return 0;
+}
+
+获取当前轨迹条的位置：
+getTrackbarPos(trackbarname,winname);
+
+3.3鼠标操作：
+
+SetMouseCallback为指定的窗口设置鼠标回调函数
+C++:void setMouseCallback(const string& winname,MouseCallback onMouse,void* userdata  = 0);
+
+onMouse ,指定窗口里每次鼠标实践发生的时候，被调用的函数指针。
+	void Foo(int event,int x,int y,int flags,void* param)
+	event 是EVENT_+变量之一
+	x，y是鼠标指针在图像座标系中的座标
+	flags是EVENT_FLAG的组合，
+	param是用户定义的传递到SetMouseCallback函数调用的参数。
+	如EVENT_MOUSEMOVE、EVENT_LBUTTONDOWN
+
+void*类型的userdata，用户定义的传递到回调函数的参数，有默认值0
+
+
+
+

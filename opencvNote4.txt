@@ -1,0 +1,91 @@
+Mat 拷贝构造函数只复制信息头和矩阵指针
+Mat D(A,Rect(10,10,100,100))
+Mat E = A(Range:all(),Range(1,3))
+
+Mat B(A)
+Mat C
+C = A;
+
+拷贝矩阵本身：
+Mat F= A.clone();
+Mat G
+A.copyTo(G);
+
+颜色系统:
+RGB
+HSV HLS 把颜色分解成色调，饱和度，和亮度
+YCrCb在JPEG中广泛应用
+CIE L*a*b是一种在感知上均匀的颜色控件，适合用来度量两个颜色之间的距离
+
+7中创建Mat对象的方法：
+1.Mat M(2,2,CV_8UC3,Scalar(0,0,255));
+CV_[The number of bits per item][Signed or Unsigned][Type Prefix]C[The channel number] 8位的unsigned char 型，每个像素由三个元素组成的三通道。Scalar是一个short型的向量
+
+2.
+int sz[3] = {2,2,2};
+Mat L(3,sz,CV_8UC,Scalar::all(0));
+
+3.IplImage* img = cvLoadImage("1.jpg",1);
+Mat mtx(img) //转换IplImage*->Mat
+
+4.
+M.creat(4,4,CV_8UC(2));
+此方法不能为矩阵设置初始值，只是在改变尺寸的时候重新为矩阵数据开辟内存
+
+5.
+Mat E = Mat::eye(4,4,CV_64F);
+Mat O = Mat::ones(2,2,CV_32F);
+Mat Z = Mat::zeros(3,3,CV_8UC1);
+
+6.
+Mat C = (Mat_<double>(3,3)<<0,-1,0,-1,5,-1,0,-1,0);
+7.
+Mat RowClone = C.row(1).clone();
+
+4.1.5OpenCV中的格式化输出方法
+1.cout<<mat
+2.format(mat,"python")
+3."csv"
+4.numpy
+5.C
+
+二维点：
+Point2f p(6,2)
+三维点
+Point3f p(1,2,3);
+
+vector<float> v;
+cout<<Mat(v);
+
+点：
+Point、Point_<int>、Point2i
+Point_<float> Point2f
+
+颜色Scalar
+Scalar(a,b,c)
+Scalar其实就是Scalar_<double>
+
+尺寸的类Size
+Size_<int> Size2i Size
+
+矩形类Rect
+成员函数:size()
+area()
+contains(Point)
+inside(Rect)
+tl()返回左上角座标
+br()返回右下角座标
+
+Rect rect = rect1& rect2交集
+Rect rect = rect1|rect2 并集
+
+平移：
+Rect rectShift = rect+point;
+缩放：
+Rect rectScale = rect + size;
+
+
+颜色空间转换
+cvtColor()
+cvtColor(srcImage,dstImage,COLOR_GRAY2BGR)
+

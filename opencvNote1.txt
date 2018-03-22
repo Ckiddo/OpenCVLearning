@@ -1,0 +1,44 @@
+g++ *.cpp `pkg-config --libs opencv`
+		  `pkg-config --cflags --libs opencv`
+
+图像载入：Mat = imread("");
+显示：imshow("title",Mat);
+
+waitKey(0); // 等待
+
+图像腐蚀：
+Mat getStructuringElement(MORPH_RECT,Size(15,15));
+erod(MAT in,Mat out,Mat gse);
+
+图像模糊：
+blur(Mat in,Mat out,Size(7,7));
+
+canny边缘检测：
+Mat edge,grayImage
+	转换为灰度图像：
+		cvtColor(Mat in,Mat out,CV_BGR2GRAY);
+	降噪：
+		blur(,,Size(3,3));
+	运行Canny算子：
+		Canny(edge,edge,3,9,3);
+
+
+读取并播放视频：
+VideoCapture capture;
+capture.open("1.avi");
+
+或者VideoCapture capture("1.avi");
+
+
+Mat frame;
+capture>>frame;
+
+if(frame.empty()){
+	break;
+}
+
+imshow("",frame);
+
+
+调用摄像头
+cpature.open(0);
